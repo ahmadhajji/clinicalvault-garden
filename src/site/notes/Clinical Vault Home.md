@@ -1,30 +1,22 @@
 ---
-title: Clinical Vault
-noteTitle: Clinical Vault
-description: Public notes published from Obsidian.
-tags:
-  - gardenEntry
-  - home
-  - writing
-created: 2026-03-03
-updated: 2026-03-03
-published: 2026-03-03
-dg-publish: true
-dg-home: true
+{"dg-publish":true,"permalink":"/clinical-vault-home/","title":"Clinical Vault","tags":["home","gardenEntry"]}
 ---
 
-Welcome to **Clinical Vault**.
 
-This local demo is seeded with sample notes so you can test the full flow before deploying.
+# Clinical Vault
 
-## Start Reading
+Welcome to my public notes.
 
-- [[Heart Failure Primer]]
-- [[Systems for Studying]]
-- [[About]]
+This site is published from Obsidian using the Digital Garden workflow.
 
-## How Publishing Works
+## Publishing Rules
 
-Only notes with `dg-publish: true` are rendered in this site build.
+- Notes are public only when `dg-publish: true`.
+- All other notes stay private.
+- This note is the homepage because it has `dg-home: true`.
 
-Notes with `dg-publish: false` stay unpublished.
+## Start Here
+
+- Use search to find topics quickly.
+- Browse recent notes and tags below.
+
