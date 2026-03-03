@@ -92,9 +92,14 @@ function userComputed(data) {
     return note.fileSlug === "about" || note.fileSlug === "about-me" || note.fileSlug === "about me";
   });
 
+  const lastPublished = notes.length > 0 ? notes[0].dateLabel : "";
+
   return {
     latestNotes,
     topTags,
+    noteCount: notes.length,
+    topicCount: topTags.length,
+    lastPublished,
     aboutUrl: aboutNote ? aboutNote.url : null,
   };
 }

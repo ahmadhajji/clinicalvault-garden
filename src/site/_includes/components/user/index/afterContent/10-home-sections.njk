@@ -1,18 +1,20 @@
 {% if tags and tags.indexOf('gardenEntry') != -1 %}
 <section class="cv-home-intro" aria-label="Site intro">
-  <p class="cv-eyebrow">Obsidian-first publishing</p>
-  <h2>Simple writing workflow, published directly from your vault.</h2>
+  <p class="cv-eyebrow">Clinical Vault</p>
+  <h2>Personal notes on medicine, study systems, and clinical learning.</h2>
   <p>
-    Notes are published only when <code>dg-publish: true</code> is set. Everything else in the vault stays private.
+    A focused, continuously updated knowledge base published from Obsidian.
   </p>
-  {% if userComputed.aboutUrl %}
-  <p class="cv-about-link"><a href="{{ userComputed.aboutUrl }}">Read the about page</a></p>
-  {% endif %}
+  <div class="cv-home-stats" aria-label="Site stats">
+    <span><strong>{{ userComputed.noteCount }}</strong> published notes</span>
+    <span><strong>{{ userComputed.topicCount }}</strong> active topics</span>
+    {% if userComputed.lastPublished %}<span>latest update <strong>{{ userComputed.lastPublished }}</strong></span>{% endif %}
+  </div>
 </section>
 
 <section class="cv-home-grid" aria-label="Homepage sections">
   <article class="cv-panel">
-    <h3>Latest notes</h3>
+    <h3>Latest Notes</h3>
     {% if userComputed.latestNotes and userComputed.latestNotes.length %}
     <ul class="cv-latest-list">
       {% for item in userComputed.latestNotes %}
@@ -28,15 +30,15 @@
   </article>
 
   <article class="cv-panel">
-    <h3>Browse by topic</h3>
+    <h3>Browse By Topic</h3>
     {% if userComputed.topTags and userComputed.topTags.length %}
     <div class="cv-tag-cloud">
       {% for tag in userComputed.topTags %}
-      <a class="tag" onclick="toggleTagSearch(this)">#{{ tag.name }}</a>
+      <a class="tag" onclick="toggleTagSearch(this)">#{{ tag.name }} <span>{{ tag.count }}</span></a>
       {% endfor %}
     </div>
     {% else %}
-    <p>Add tags in note frontmatter to populate topic browse.</p>
+    <p>No topics yet.</p>
     {% endif %}
   </article>
 </section>
