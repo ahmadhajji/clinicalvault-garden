@@ -20,12 +20,80 @@ const firstString = (...values) => {
   return "";
 };
 
+const firstLikelyVideoValue = (data) => {
+  const direct = firstString(
+    data["video link"],
+    data.video_link,
+    data.videoLink,
+    data["video-link"],
+    data["video url"],
+    data["video-url"],
+    data.video
+  );
+
+  if (direct) {
+    return direct;
+  }
+
+  const keyMatches = (key) => {
+    if (!key || typeof key !== "string") {
+      return false;
+    }
+    const normalized = key.toLowerCase().replace(/[^a-z]/g, "");
+    return (
+      normalized === "videolink" ||
+      normalized === "videourl" ||
+      normalized === "videoembed" ||
+      normalized === "videolinkurl"
+    );
+  };
+
+  for (const [key, value] of Object.entries(data || {})) {
+    if (!keyMatches(key)) {
+      continue;
+    }
+
+    if (typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+
+    if (Array.isArray(value)) {
+      const fromArray = value.find(
+        (item) => typeof item === "string" && item.trim()
+      );
+      if (fromArray) {
+        return fromArray.trim();
+      }
+    }
+
+    if (
+      value &&
+      typeof value === "object" &&
+      typeof value.url === "string" &&
+      value.url.trim()
+    ) {
+      return value.url.trim();
+    }
+  }
+
+  return "";
+};
+
 const toEmbedInfo = (rawValue) => {
   if (!rawValue) {
     return null;
   }
 
-  let urlString = rawValue;
+  let urlString = String(rawValue).trim();
+  const markdownLinkMatch = urlString.match(/\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/i);
+  if (markdownLinkMatch && markdownLinkMatch[1]) {
+    urlString = markdownLinkMatch[1].trim();
+  }
+
+  if (urlString.startsWith("<") && urlString.endsWith(">")) {
+    urlString = urlString.slice(1, -1).trim();
+  }
+
   if (!/^https?:\/\//i.test(urlString) && /^www\./i.test(urlString)) {
     urlString = `https://${urlString}`;
   }
@@ -137,15 +205,7 @@ module.exports = {
       return noteSettings;
     },
     videoEmbed: (data) => {
-      const raw = firstString(
-        data["video link"],
-        data.video_link,
-        data.videoLink,
-        data["video-link"],
-        data["video url"],
-        data["video-url"],
-        data.video
-      );
+      const raw = firstLikelyVideoValue(data);
       return toEmbedInfo(raw);
     },
   },

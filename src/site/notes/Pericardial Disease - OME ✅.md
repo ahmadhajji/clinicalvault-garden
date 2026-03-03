@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/pericardial-disease-ome/","title":"Pericardial Disease (Pericarditis, Effusion/Tamponade, Constrictive Pericarditis)","tags":["cardiology","pericardium","diagnosis","management","uworld","ekg"]}
+{"dg-publish":true,"permalink":"/pericardial-disease-ome/","title":"Pericardial Disease (Pericarditis, Effusion/Tamponade, Constrictive Pericarditis)","tags":["cardiology","pericardium","diagnosis","management","uworld","ekg"],"video link":"https://drive.google.com/file/d/1U7FjDtubyX5T5XsdP1bWXC4f71lsTb1e/view?usp=sharing"}
 ---
 
 # Quick View

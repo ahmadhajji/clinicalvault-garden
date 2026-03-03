@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/valvular-disease-ome/","title":"Valvular Disease and Murmur Identification"}
+{"dg-publish":true,"permalink":"/valvular-disease-ome/","title":"Valvular Disease and Murmur Identification","video link":"https://drive.google.com/file/d/1LqFD_uPKNuQ-jEUT1z1eDGshOZ5wfSKs/view?usp=sharing"}
 ---
 
 # Quick View

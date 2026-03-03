@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/heart-failure-ome/","title":"Heart Failure","tags":["cardiology","heartfailure","diagnosis","management","uworld","physiology"]}
+{"dg-publish":true,"permalink":"/heart-failure-ome/","title":"Heart Failure","tags":["cardiology","heartfailure","diagnosis","management","uworld","physiology"],"video link":"https://drive.google.com/file/d/1fflZjun4tpPxh3wibpo8WFU48SENUgbP/view?usp=sharing"}
 ---
 
 # Heart Failure 

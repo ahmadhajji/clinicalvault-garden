@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/cardiomyopathy-ome/","title":"Cardiomyopathies (Dilated, Hypertrophic, Concentric Hypertrophy, Restrictive)","tags":["cardiology","cardiomyopathy","heart-failure","echocardiography","pathophysiology","uworld"]}
+{"dg-publish":true,"permalink":"/cardiomyopathy-ome/","title":"Cardiomyopathies (Dilated, Hypertrophic, Concentric Hypertrophy, Restrictive)","tags":["cardiology","cardiomyopathy","heart-failure","echocardiography","pathophysiology","uworld"],"video link":"https://drive.google.com/file/d/1HOijUZdHt2QpOKKJzrlosjj7GShdDdiz/view?usp=sharing"}
 ---
 
 # Quick View
