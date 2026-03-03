@@ -1,0 +1,43 @@
+{% if tags and tags.indexOf('gardenEntry') != -1 %}
+<section class="cv-home-intro" aria-label="Site intro">
+  <p class="cv-eyebrow">Obsidian-first publishing</p>
+  <h2>Simple writing workflow, published directly from your vault.</h2>
+  <p>
+    Notes are published only when <code>dg-publish: true</code> is set. Everything else in the vault stays private.
+  </p>
+  {% if userComputed.aboutUrl %}
+  <p class="cv-about-link"><a href="{{ userComputed.aboutUrl }}">Read the about page</a></p>
+  {% endif %}
+</section>
+
+<section class="cv-home-grid" aria-label="Homepage sections">
+  <article class="cv-panel">
+    <h3>Latest notes</h3>
+    {% if userComputed.latestNotes and userComputed.latestNotes.length %}
+    <ul class="cv-latest-list">
+      {% for item in userComputed.latestNotes %}
+      <li>
+        <a href="{{ item.url }}">{{ item.title }}</a>
+        {% if item.dateLabel %}<time datetime="{{ item.dateLabel }}">{{ item.dateLabel }}</time>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No published notes yet.</p>
+    {% endif %}
+  </article>
+
+  <article class="cv-panel">
+    <h3>Browse by topic</h3>
+    {% if userComputed.topTags and userComputed.topTags.length %}
+    <div class="cv-tag-cloud">
+      {% for tag in userComputed.topTags %}
+      <a class="tag" onclick="toggleTagSearch(this)">#{{ tag.name }}</a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p>Add tags in note frontmatter to populate topic browse.</p>
+    {% endif %}
+  </article>
+</section>
+{% endif %}

@@ -8,11 +8,9 @@ module.exports = async (data) => {
   }
   let themeStyle = globSync("src/site/styles/_theme.*.css")[0] || "";
 
-  // Check for logo file (supports multiple image formats)
   const logoFiles = globSync("src/site/logo.{png,jpg,jpeg,gif,svg,webp}");
   let logoPath = "";
   if (logoFiles.length > 0) {
-    // Use the first match and convert to site-relative path
     logoPath = "/" + logoFiles[0].split("src/site/")[1];
   }
   if (themeStyle) {
@@ -86,6 +84,25 @@ module.exports = async (data) => {
     canvasResetHint: process.env.UI_CANVAS_RESET_HINT || "Double-click to reset",
   };
 
+  const giscusRepo = process.env.GISCUS_REPO || "";
+  const giscusRepoId = process.env.GISCUS_REPO_ID || "";
+  const giscusCategoryId = process.env.GISCUS_CATEGORY_ID || "";
+
+  const giscus = {
+    enabled: Boolean(giscusRepo && giscusRepoId && giscusCategoryId),
+    repo: giscusRepo,
+    repoId: giscusRepoId,
+    category: process.env.GISCUS_CATEGORY || "General",
+    categoryId: giscusCategoryId,
+    mapping: process.env.GISCUS_MAPPING || "pathname",
+    strict: process.env.GISCUS_STRICT || "0",
+    reactionsEnabled: process.env.GISCUS_REACTIONS_ENABLED || "1",
+    emitMetadata: process.env.GISCUS_EMIT_METADATA || "0",
+    inputPosition: process.env.GISCUS_INPUT_POSITION || "top",
+    lang: process.env.GISCUS_LANG || "en",
+    theme: process.env.GISCUS_THEME || "preferred_color_scheme",
+  };
+
   const meta = {
     env: process.env.ELEVENTY_ENV,
     theme: process.env.THEME,
@@ -100,6 +117,8 @@ module.exports = async (data) => {
     siteBaseUrl: baseUrl,
     styleSettingsCss,
     uiStrings,
+    cloudflareAnalyticsToken: process.env.CLOUDFLARE_ANALYTICS_TOKEN || "",
+    giscus,
     buildDate: new Date(),
   };
 

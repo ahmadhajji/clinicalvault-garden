@@ -1,0 +1,58 @@
+<section class="cv-comments" aria-label="Comments">
+  <h2>Discussion</h2>
+  {% if not meta.giscus.enabled %}
+  <p>
+    Comments are configured in the layout, but disabled locally until `GISCUS_REPO`, `GISCUS_REPO_ID`, and
+    `GISCUS_CATEGORY_ID` are set.
+  </p>
+  {% endif %}
+  <div id="cv-giscus-thread"></div>
+</section>
+{% if meta.giscus.enabled %}
+<script>
+  (function () {
+    const host = document.getElementById("cv-giscus-thread");
+    if (!host || host.dataset.loaded === "1") {
+      return;
+    }
+
+    function loadGiscus() {
+      if (host.dataset.loaded === "1") {
+        return;
+      }
+
+      host.dataset.loaded = "1";
+      const script = document.createElement("script");
+      script.src = "https://giscus.app/client.js";
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      script.setAttribute("data-repo", "{{ meta.giscus.repo }}");
+      script.setAttribute("data-repo-id", "{{ meta.giscus.repoId }}");
+      script.setAttribute("data-category", "{{ meta.giscus.category }}");
+      script.setAttribute("data-category-id", "{{ meta.giscus.categoryId }}");
+      script.setAttribute("data-mapping", "{{ meta.giscus.mapping }}");
+      script.setAttribute("data-strict", "{{ meta.giscus.strict }}");
+      script.setAttribute("data-reactions-enabled", "{{ meta.giscus.reactionsEnabled }}");
+      script.setAttribute("data-emit-metadata", "{{ meta.giscus.emitMetadata }}");
+      script.setAttribute("data-input-position", "{{ meta.giscus.inputPosition }}");
+      script.setAttribute("data-theme", "{{ meta.giscus.theme }}");
+      script.setAttribute("data-lang", "{{ meta.giscus.lang }}");
+      host.appendChild(script);
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      loadGiscus();
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        observer.disconnect();
+        loadGiscus();
+      }
+    }, { rootMargin: "240px" });
+
+    observer.observe(host);
+  })();
+</script>
+{% endif %}
