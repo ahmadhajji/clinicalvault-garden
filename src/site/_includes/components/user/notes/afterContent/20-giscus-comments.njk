@@ -12,8 +12,31 @@
 <script>
   (function () {
     const host = document.getElementById("cv-giscus-thread");
+    const configuredTheme = "{{ meta.giscus.theme }}";
     if (!host || host.dataset.loaded === "1") {
       return;
+    }
+
+    function resolveGiscusTheme() {
+      if (configuredTheme && configuredTheme !== "preferred_color_scheme") {
+        return configuredTheme;
+      }
+
+      const surface = document.querySelector("main.content") || document.body;
+      const bg = getComputedStyle(surface).backgroundColor;
+      const rgb = (bg.match(/\d+/g) || []).slice(0, 3).map(Number);
+
+      if (rgb.length !== 3) {
+        return "light";
+      }
+
+      const linear = rgb.map((channel) => {
+        const value = channel / 255;
+        return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+      });
+
+      const luminance = 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+      return luminance < 0.4 ? "dark_dimmed" : "light";
     }
 
     function loadGiscus() {
@@ -35,7 +58,7 @@
       script.setAttribute("data-reactions-enabled", "{{ meta.giscus.reactionsEnabled }}");
       script.setAttribute("data-emit-metadata", "{{ meta.giscus.emitMetadata }}");
       script.setAttribute("data-input-position", "{{ meta.giscus.inputPosition }}");
-      script.setAttribute("data-theme", "{{ meta.giscus.theme }}");
+      script.setAttribute("data-theme", resolveGiscusTheme());
       script.setAttribute("data-lang", "{{ meta.giscus.lang }}");
       host.appendChild(script);
     }

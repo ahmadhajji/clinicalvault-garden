@@ -1,0 +1,28 @@
+{% if videoEmbed and videoEmbed.url and not (tags and tags.indexOf('gardenEntry') != -1) %}
+<section class="cv-video-embed" aria-label="Note video">
+  <div class="cv-video-embed-head">
+    <p class="cv-video-embed-label">Video</p>
+    {% if videoEmbed.provider %}<span class="cv-video-embed-provider">{{ videoEmbed.provider }}</span>{% endif %}
+  </div>
+
+  {% if videoEmbed.kind == "video" %}
+    <video controls preload="metadata" playsinline src="{{ videoEmbed.url }}"></video>
+  {% elif videoEmbed.kind == "iframe" %}
+    <div class="cv-video-frame">
+      <iframe
+        src="{{ videoEmbed.url }}"
+        title="Embedded note video"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
+    </div>
+  {% else %}
+    <p class="cv-video-link-fallback">
+      Open video:
+      <a href="{{ videoEmbed.url }}" target="_blank" rel="noopener noreferrer">{{ videoEmbed.url }}</a>
+    </p>
+  {% endif %}
+</section>
+{% endif %}
