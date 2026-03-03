@@ -5,18 +5,17 @@
 
 # Clinical Vault
 
-Welcome to my public notes.
+Personal notes on medicine, study systems, and clinical learning.
 
-This site is published from Obsidian using the Digital Garden workflow.
+This is a focused, continuously updated knowledge base.
 
-## Publishing Rules
+## What You Will Find
 
-- Notes are public only when `dg-publish: true`.
-- All other notes stay private.
-- This note is the homepage because it has `dg-home: true`.
+- High-yield clinical summaries
+- Practical diagnostic and management frameworks
+- Study-ready notes refined from active learning
 
 ## Start Here
 
 - Use search to find topics quickly.
 - Browse recent notes and tags below.
-

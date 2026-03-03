@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/coronary-artery-disease-ome/","title":"Coronary Artery Disease — Spectrum, ACS Workup, Stress Testing, Cath & Initial Treatment","tags":["cardiology","cad","acs","diagnosis","management","ekg","stress-test"],"video link":"https://drive.google.com/file/d/1KSlpa8u6Wr1zHG2L8nxBBtMMWdGrdf-V/view?usp=sharing"}
+{"dg-publish":true,"permalink":"/coronary-artery-disease-ome/","title":"Coronary Artery Disease — Spectrum, ACS Workup, Stress Testing, Cath & Initial Treatment","tags":["cardiology","cad","acs","diagnosis","management","ekg","stress-test"]}
 ---
 
 # Coronary Artery Disease — Obsidian Note
