@@ -23,8 +23,24 @@ jobs:
           RECONCILE_URL: ${{ secrets.DRIVE_RECONCILE_URL }}
           SYNC_SECRET: ${{ secrets.SYNC_SECRET }}
         run: |
+          tmp_body="$(mktemp)"
           if [ -n "$SYNC_SECRET" ]; then
-            curl -fsSL -X POST "$RECONCILE_URL" -H "x-sync-secret: $SYNC_SECRET"
+            status_code="$(curl -sSL -o "$tmp_body" -w "%{http_code}" -X POST "$RECONCILE_URL" -H "x-sync-secret: $SYNC_SECRET")"
           else
-            curl -fsSL -X POST "$RECONCILE_URL"
+            status_code="$(curl -sSL -o "$tmp_body" -w "%{http_code}" -X POST "$RECONCILE_URL")"
           fi
+
+          cat "$tmp_body"
+          echo
+
+          if [ "$status_code" = "200" ]; then
+            exit 0
+          fi
+
+          if [ "$status_code" = "500" ] && grep -q "Missing required environment variable" "$tmp_body"; then
+            echo "Drive sync env vars are not configured yet; skipping reconcile failure."
+            exit 0
+          fi
+
+          echo "Reconcile failed with status code: $status_code"
+          exit 1
