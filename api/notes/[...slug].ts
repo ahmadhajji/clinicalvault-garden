@@ -14,13 +14,22 @@ function parseDrafts(value: string | string[] | undefined): boolean {
   return normalized === "true" || normalized === "1" || normalized === "yes";
 }
 
+function slugFromRequest(req: VercelRequest): string {
+  const pathOnly = (req.url || "").split("?")[0] || "";
+  const prefix = "/api/notes/";
+  if (pathOnly.startsWith(prefix)) {
+    return decodeURIComponent(pathOnly.slice(prefix.length)).replace(/^\/+|\/+$/g, "");
+  }
+  return decodeURIComponent(normalizeSlug(req.query.slug)).replace(/^\/+|\/+$/g, "");
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "GET") {
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
 
-  const slug = decodeURIComponent(normalizeSlug(req.query.slug)).replace(/^\/+|\/+$/g, "");
+  const slug = slugFromRequest(req);
   if (!slug) {
     res.status(400).json({ error: "Missing note slug" });
     return;
