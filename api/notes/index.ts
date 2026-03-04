@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { listNotes } from "../_lib/notes";
+import { listPublicNotes } from "../_lib/content-store";
 
 function queryValue(value: string | string[] | undefined): string {
   if (Array.isArray(value)) {
@@ -24,7 +24,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const draftsQuery = queryValue(req.query.drafts);
     const includeDrafts = draftsQuery ? parseDrafts(draftsQuery) : false;
 
-    const items = await listNotes({
+    const items = await listPublicNotes({
       query: q,
       includeDrafts,
     });

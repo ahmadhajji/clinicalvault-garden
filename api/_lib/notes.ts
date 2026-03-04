@@ -1,22 +1,8 @@
 import matter from "gray-matter";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-
-export type Frontmatter = Record<string, unknown>;
-
-export type NoteRecord = {
-  slug: string;
-  title: string;
-  tags: string[];
-  excerpt: string;
-  content: string;
-  permalink: string | null;
-  published: boolean;
-  updatedAt: string;
-  frontmatter: Frontmatter;
-};
-
-export type NoteMeta = Omit<NoteRecord, "content" | "frontmatter">;
+import { toVideoEmbed } from "./video";
+import type { Frontmatter, NoteMeta, NoteRecord } from "./types";
 
 const defaultNotesDir = path.resolve(process.cwd(), "src/site/notes");
 
@@ -101,7 +87,7 @@ function excerptFromContent(markdown: string): string {
   return `${plainText.slice(0, 217)}...`;
 }
 
-function toMeta(note: NoteRecord): NoteMeta {
+export function toMeta(note: NoteRecord): NoteMeta {
   return {
     slug: note.slug,
     title: note.title,
@@ -110,6 +96,53 @@ function toMeta(note: NoteRecord): NoteMeta {
     permalink: note.permalink,
     published: note.published,
     updatedAt: note.updatedAt,
+    videoEmbed: note.videoEmbed,
+    sourceFileId: note.sourceFileId || null,
+    sourceModifiedTime: note.sourceModifiedTime || null,
+  };
+}
+
+export function parseNoteFromRaw(params: {
+  raw: string;
+  filePathForSlug: string;
+  notesDirForSlug: string;
+  mtimeIso?: string;
+  sourceFileId?: string;
+  sourceModifiedTime?: string;
+}): NoteRecord | null {
+  const parsed = matter(params.raw);
+  const frontmatter = (parsed.data || {}) as Frontmatter;
+  const slug = deriveSlug(params.filePathForSlug, params.notesDirForSlug, frontmatter);
+  if (!slug) {
+    return null;
+  }
+
+  const titleFromData =
+    typeof frontmatter.title === "string" ? frontmatter.title.trim() : "";
+  const titleFallback = path
+    .basename(params.filePathForSlug)
+    .replace(/\.(md|markdown)$/i, "")
+    .trim();
+
+  const updatedAt =
+    (typeof frontmatter.updated === "string" && frontmatter.updated.trim()) ||
+    params.sourceModifiedTime ||
+    params.mtimeIso ||
+    new Date().toISOString();
+
+  return {
+    slug,
+    title: titleFromData || titleFallback,
+    tags: normalizeTags(frontmatter.tags),
+    excerpt: excerptFromContent(parsed.content),
+    content: parsed.content,
+    permalink: normalizePermalink(frontmatter.permalink),
+    published: toBoolean(frontmatter["dg-publish"]),
+    updatedAt,
+    frontmatter,
+    videoEmbed: toVideoEmbed(frontmatter),
+    sourceFileId: params.sourceFileId || null,
+    sourceModifiedTime: params.sourceModifiedTime || null,
   };
 }
 
@@ -127,43 +160,26 @@ async function* walkFiles(root: string): AsyncGenerator<string> {
   }
 }
 
-export async function loadNotes(): Promise<NoteRecord[]> {
+export async function loadLocalNotes(): Promise<NoteRecord[]> {
   const notesDir = resolveNotesDir();
   const notes: NoteRecord[] = [];
 
   for await (const filePath of walkFiles(notesDir)) {
     const raw = await fs.readFile(filePath, "utf8");
-    const parsed = matter(raw);
-    const frontmatter = (parsed.data || {}) as Frontmatter;
+    const stats = await fs.stat(filePath);
 
-    const slug = deriveSlug(filePath, notesDir, frontmatter);
-    if (!slug) {
+    const note = parseNoteFromRaw({
+      raw,
+      filePathForSlug: filePath,
+      notesDirForSlug: notesDir,
+      mtimeIso: stats.mtime.toISOString(),
+    });
+
+    if (!note) {
       continue;
     }
 
-    const titleFromData =
-      typeof frontmatter.title === "string" ? frontmatter.title.trim() : "";
-    const titleFallback = path
-      .basename(filePath)
-      .replace(/\.(md|markdown)$/i, "")
-      .trim();
-
-    const stats = await fs.stat(filePath);
-
-    notes.push({
-      slug,
-      title: titleFromData || titleFallback,
-      tags: normalizeTags(frontmatter.tags),
-      excerpt: excerptFromContent(parsed.content),
-      content: parsed.content,
-      permalink: normalizePermalink(frontmatter.permalink),
-      published: toBoolean(frontmatter["dg-publish"]),
-      updatedAt:
-        typeof frontmatter.updated === "string" && frontmatter.updated.trim()
-          ? frontmatter.updated.trim()
-          : stats.mtime.toISOString(),
-      frontmatter,
-    });
+    notes.push(note);
   }
 
   return notes.sort((a, b) => {
@@ -171,48 +187,4 @@ export async function loadNotes(): Promise<NoteRecord[]> {
     const bTime = new Date(b.updatedAt).getTime();
     return bTime - aTime;
   });
-}
-
-export async function listNotes(input: {
-  query?: string;
-  includeDrafts?: boolean;
-}): Promise<NoteMeta[]> {
-  const { query = "", includeDrafts = false } = input;
-  const notes = await loadNotes();
-  const queryNormalized = query.trim().toLowerCase();
-
-  return notes
-    .filter((note) => includeDrafts || note.published)
-    .filter((note) => {
-      if (!queryNormalized) {
-        return true;
-      }
-      const haystack = [note.title, note.excerpt, note.tags.join(" "), note.slug]
-        .join(" ")
-        .toLowerCase();
-      return haystack.includes(queryNormalized);
-    })
-    .map(toMeta);
-}
-
-export async function getNoteBySlug(
-  slug: string,
-  input: { includeDrafts?: boolean } = {}
-): Promise<NoteRecord | null> {
-  const includeDrafts = input.includeDrafts ?? false;
-  const notes = await loadNotes();
-  const note = notes.find((item) => item.slug === slug);
-  if (!note) {
-    return null;
-  }
-  if (!includeDrafts && !note.published) {
-    return null;
-  }
-  return note;
-}
-
-export async function getNotesCount(input: { includeDrafts?: boolean } = {}): Promise<number> {
-  const includeDrafts = input.includeDrafts ?? true;
-  const notes = await loadNotes();
-  return includeDrafts ? notes.length : notes.filter((note) => note.published).length;
 }

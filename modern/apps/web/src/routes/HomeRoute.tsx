@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { fetchNotes, formatDate } from "../lib/api";
 
 type HomeRouteProps = {
-  syncLabel: string;
+  syncLabel?: string;
 };
 
 export function HomeRoute({ syncLabel }: HomeRouteProps) {
@@ -47,15 +47,15 @@ export function HomeRoute({ syncLabel }: HomeRouteProps) {
   return (
     <div className="page-shell">
       <section className="hero-panel">
-        <p className="eyebrow">Clinical Vault 2.0</p>
-        <h1>Live Notes, Zero Publish Friction</h1>
+        <p className="eyebrow">Clinical Vault</p>
+        <h1>Clinical Learning Notes</h1>
         <p>
-          Deployed notes refresh automatically every 15 seconds. No manual page
-          refresh needed while you review updates.
+          Personal notes on medicine, study systems, and clinical learning.
         </p>
         <div className="hero-metrics">
           <span>{notesQuery.data?.total ?? 0} notes loaded</span>
-          <span>{syncLabel}</span>
+          <span>Use Cmd+K / Ctrl+K for universal search</span>
+          {syncLabel ? <span>{syncLabel}</span> : null}
         </div>
       </section>
 

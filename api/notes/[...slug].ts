@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getNoteBySlug } from "../_lib/notes";
+import { getPublicNoteBySlug } from "../_lib/content-store";
 
 function normalizeSlug(value: string | string[] | undefined): string {
   if (Array.isArray(value)) {
@@ -37,7 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const includeDrafts = parseDrafts(req.query.drafts);
-    const note = await getNoteBySlug(slug, { includeDrafts });
+    const note = await getPublicNoteBySlug({ slug, includeDrafts });
 
     if (!note) {
       res.status(404).json({ error: "Note not found", slug });

@@ -1,10 +1,16 @@
 {
     "outputDirectory": "modern/apps/web/dist",
-    "installCommand": "npm run modern:install",
+    "installCommand": "npm install && npm run modern:install",
     "buildCommand": "npm run modern:build",
     "devCommand": "npm start",
+    "crons": [
+        { "path": "/api/sync/drive/reconcile", "schedule": "*/5 * * * *" }
+    ],
     "routes": [
         { "handle": "filesystem" },
+        { "src": "/library", "dest": "/index.html" },
+        { "src": "/library/(.*)", "dest": "/index.html" },
+        { "src": "/note", "dest": "/index.html" },
         { "src": "/note/(.*)", "dest": "/index.html" }
       ]
 }

@@ -5,6 +5,8 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { fetchNote, formatDate } from "../lib/api";
+import { VideoEmbed } from "../components/VideoEmbed";
+import { DiscussionSection } from "../components/DiscussionSection";
 
 export function NoteRoute() {
   const params = useParams();
@@ -73,6 +75,8 @@ export function NoteRoute() {
           ) : null}
         </header>
 
+        {note.videoEmbed ? <VideoEmbed videoEmbed={note.videoEmbed} /> : null}
+
         <ReactMarkdown
           remarkPlugins={[remarkGfm, remarkMath]}
           rehypePlugins={[rehypeKatex]}
@@ -80,6 +84,8 @@ export function NoteRoute() {
           {note.content}
         </ReactMarkdown>
       </article>
+
+      <DiscussionSection slug={note.slug} />
     </main>
   );
 }
