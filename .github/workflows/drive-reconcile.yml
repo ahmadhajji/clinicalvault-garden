@@ -24,7 +24,7 @@ jobs:
           SYNC_SECRET: ${{ secrets.SYNC_SECRET }}
         run: |
           if [ -n "$SYNC_SECRET" ]; then
-            curl -fsS -X POST "$RECONCILE_URL" -H "x-sync-secret: $SYNC_SECRET"
+            curl -fsSL -X POST "$RECONCILE_URL" -H "x-sync-secret: $SYNC_SECRET"
           else
-            curl -fsS -X POST "$RECONCILE_URL"
+            curl -fsSL -X POST "$RECONCILE_URL"
           fi
