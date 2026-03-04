@@ -65,6 +65,21 @@ Use Digital Garden command palette commands:
 
 Unpublishing is done by removing/toggling off `dg-publish`, then running publish-all.
 
+### One-command git push for note updates
+
+After publishing from Obsidian, run:
+
+```bash
+npm run publish:notes
+```
+
+This command:
+
+- stages note changes from `src/site/notes`
+- creates a timestamped commit if there are changes
+- rebases on `origin/main`
+- pushes to GitHub (triggering Vercel redeploy)
+
 ## Comments (Giscus)
 
 Comments render only when these env vars are set:
