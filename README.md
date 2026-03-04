@@ -79,5 +79,13 @@ Optional:
 - install: `npm install && npm run modern:install`
 - build: `npm run modern:build`
 - output: `modern/apps/web/dist`
-- cron reconcile every 5 minutes: `/api/sync/drive/reconcile`
 - SPA rewrites for `/note/*` and `/library`
+
+## Reconcile fallback scheduler
+
+Vercel cron is not enabled in this project, so fallback reconcile runs via GitHub Actions:
+
+- workflow: `.github/workflows/drive-reconcile.yml`
+- schedule: every 5 minutes
+- required repo secret: `DRIVE_RECONCILE_URL` (example: `https://clinicalvault.me/api/sync/drive/reconcile`)
+- optional repo secret: `SYNC_SECRET` (if your endpoint is protected)

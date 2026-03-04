@@ -1,0 +1,30 @@
+name: Drive Reconcile Fallback
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate required secret
+        env:
+          RECONCILE_URL: ${{ secrets.DRIVE_RECONCILE_URL }}
+        run: |
+          if [ -z "$RECONCILE_URL" ]; then
+            echo "Missing DRIVE_RECONCILE_URL secret."
+            exit 1
+          fi
+
+      - name: Trigger reconcile endpoint
+        env:
+          RECONCILE_URL: ${{ secrets.DRIVE_RECONCILE_URL }}
+          SYNC_SECRET: ${{ secrets.SYNC_SECRET }}
+        run: |
+          if [ -n "$SYNC_SECRET" ]; then
+            curl -fsS -X POST "$RECONCILE_URL" -H "x-sync-secret: $SYNC_SECRET"
+          else
+            curl -fsS -X POST "$RECONCILE_URL"
+          fi

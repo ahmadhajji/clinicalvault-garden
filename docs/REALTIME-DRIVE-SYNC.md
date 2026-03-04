@@ -32,8 +32,13 @@ Optional hardening:
 - Set `GOOGLE_DRIVE_WEBHOOK_TOKEN` and configure matching channel token in Drive watch setup.
 - Set `SYNC_SECRET` and include `x-sync-secret` header on manual reconcile calls.
 
-## Cron fallback
+## Scheduled fallback reconcile
 
-`vercel.json` config triggers `/api/sync/drive/reconcile` every 5 minutes.
+Fallback reconcile runs through GitHub Actions in this repo:
 
-If `SYNC_SECRET` is set, configure cron requests to include `x-sync-secret` via an external scheduler that supports custom headers (Vercel native cron does not send custom headers).
+- workflow: `.github/workflows/drive-reconcile.yml`
+- schedule: every 5 minutes
+- required repository secret: `DRIVE_RECONCILE_URL`
+- optional repository secret: `SYNC_SECRET`
+
+If `SYNC_SECRET` is configured in Vercel, set the same value as a GitHub repository secret so the workflow can send `x-sync-secret`.
