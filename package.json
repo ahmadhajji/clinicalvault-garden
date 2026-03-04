@@ -6,7 +6,7 @@
     "scripts": {
         "modern:install": "npm --prefix modern install",
         "modern:dev": "npm --prefix modern run dev",
-        "modern:build": "npm --prefix modern run build",
+        "modern:build": "npm --prefix modern install && npm --prefix modern run build",
         "modern:start": "npm --prefix modern run start",
         "legacy:start": "npm-run-all get-theme build:sass --parallel watch:*",
         "legacy:build": "npm-run-all get-theme build:*",
@@ -18,13 +18,14 @@
         "build:sass": "sass src/site/styles:dist/styles --style compressed",
         "get-theme": "node src/site/get-theme.js",
         "build": "npm run modern:build",
-        "publish:notes": "bash scripts/publish-notes.sh"
+        "publish:notes": "bash scripts/publish-notes.sh",
+        "postinstall": "npm run modern:install"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "engines": {
-      "node": "22.x"
+        "node": "22.x"
     },
     "devDependencies": {
         "@11ty/eleventy": "^3.1.2",

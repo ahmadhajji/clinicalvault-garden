@@ -8,7 +8,7 @@
     "dev": "npm-run-all --parallel dev:server dev:web",
     "dev:server": "npm --workspace @clinicalvault/server run dev",
     "dev:web": "npm --workspace @clinicalvault/web run dev",
-    "build": "npm-run-all build:server build:web",
+    "build": "npm run build:web",
     "build:server": "npm --workspace @clinicalvault/server run build",
     "build:web": "npm --workspace @clinicalvault/web run build",
     "start": "npm --workspace @clinicalvault/server run start"
