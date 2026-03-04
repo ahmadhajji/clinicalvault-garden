@@ -1,0 +1,19 @@
+{
+  "name": "clinicalvault-modern",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:server dev:web",
+    "dev:server": "npm --workspace @clinicalvault/server run dev",
+    "dev:web": "npm --workspace @clinicalvault/web run dev",
+    "build": "npm-run-all build:server build:web",
+    "build:server": "npm --workspace @clinicalvault/server run build",
+    "build:web": "npm --workspace @clinicalvault/web run build",
+    "start": "npm --workspace @clinicalvault/server run start"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
