@@ -1,10 +1,11 @@
 {
-    "outputDirectory": "dist",
-    "installCommand": "npm install",
-    "buildCommand": "npm run build",
-    "devCommand": "npm run start",
+    "outputDirectory": "modern/apps/web/dist",
+    "installCommand": "npm run modern:install",
+    "buildCommand": "npm run modern:build",
+    "devCommand": "npm start",
     "routes": [
+        { "src": "/api/(.*)", "dest": "/api/$1" },
         { "handle": "filesystem" },
-        { "src": "/(.*)", "status": 404, "dest": "/404" }
+        { "src": "/(.*)", "dest": "/index.html" }
       ]
 }

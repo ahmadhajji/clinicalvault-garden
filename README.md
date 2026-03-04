@@ -1,114 +1,40 @@
-# Clinical Vault (Obsidian Digital Garden)
+# Clinical Vault Live (Vercel-First)
 
-Clinical Vault is rebuilt as a static Obsidian-first publishing stack using the Digital Garden template.
+Clinical Vault now runs as a modern React + TypeScript app backed by Vercel serverless APIs.
 
-## Stack
+## Architecture
 
-- Obsidian + Digital Garden plugin (`dg-publish` / `dg-home`)
-- Eleventy static site (Digital Garden template)
-- Vercel Free hosting
-- Cloudflare DNS + Web Analytics
-- Giscus comments (optional, env-controlled)
+- Frontend: React + TypeScript + Vite (`modern/apps/web`)
+- API: Vercel Functions (`api/**`)
+- Content source: Markdown notes in `src/site/notes`
+- Sync behavior on deploy: frontend polls APIs every 15 seconds
 
-## What Changed
+## Important behavior on Vercel
 
-- Removed legacy app complexity (server, DB, auth, sync daemon, push APIs).
-- Publishing is now controlled directly in Obsidian Properties.
-- Visual style aligned to Minimal Theme + Flexoki tokens.
-- Comments and analytics are injected through user component slots.
+- This deployment mode does **not** run a persistent file watcher/websocket server.
+- New note changes become available after you push changes and Vercel finishes a new deployment.
+- In-browser data refresh happens automatically every 15 seconds.
+- Draft notes are hidden by default (`dg-publish: false`).
 
-## Quick Start
+## Commands
 
-1. Install dependencies:
+- Install modern workspace: `npm run modern:install`
+- Build modern app: `npm run modern:build`
+- Start modern dev stack: `npm start`
 
-```bash
-npm install
-```
+## Vercel config
 
-2. Set environment values (start from `.env.example`):
+Configured in [vercel.json](/Users/ahmadhajji/.gemini/antigravity/scratch/remaking clinicalvault.me/vercel.json):
 
-```bash
-cp .env.example .env
-```
+- Install command: `npm run modern:install`
+- Build command: `npm run modern:build`
+- Output directory: `modern/apps/web/dist`
+- SPA fallback routes to `index.html`
+- `/api/*` routes to Vercel Functions
 
-3. Build locally:
+## Legacy fallback
 
-```bash
-npm run build
-```
+Old Eleventy stack remains available:
 
-4. Start local dev server:
-
-```bash
-npm run start
-```
-
-## Obsidian Publishing Contract
-
-### Required frontmatter
-
-- `dg-publish: true` to publish a note
-- `dg-home: true` on exactly one note (site home)
-
-### Optional frontmatter
-
-- `title`, `tags`, `created`, `updated`, `published`, `description`, `aliases`
-
-`published` is editorial metadata only; it is not the publish gate.
-
-## Obsidian Commands
-
-Use Digital Garden command palette commands:
-
-- `Digital Garden: Toggle publication status`
-- `Digital Garden: Publish All Notes Marked for Publish`
-
-Unpublishing is done by removing/toggling off `dg-publish`, then running publish-all.
-
-### One-command git push for note updates
-
-After publishing from Obsidian, run:
-
-```bash
-npm run publish:notes
-```
-
-This command:
-
-- stages note changes from `src/site/notes`
-- creates a timestamped commit if there are changes
-- rebases on `origin/main`
-- pushes to GitHub (triggering Vercel redeploy)
-
-## Comments (Giscus)
-
-Comments render only when these env vars are set:
-
-- `GISCUS_REPO`
-- `GISCUS_REPO_ID`
-- `GISCUS_CATEGORY_ID`
-
-Other Giscus options are configurable in `.env`.
-
-## Analytics (Cloudflare)
-
-Set `CLOUDFLARE_ANALYTICS_TOKEN` to enable Cloudflare Web Analytics script injection.
-
-## Customization Boundaries
-
-Safe customization locations:
-
-- `src/site/styles/user/*.scss`
-- `src/site/_includes/components/user/**`
-- `src/helpers/userUtils.js`
-- `.env` / `.env.example`
-
-Avoid direct edits in template core paths unless necessary; this keeps future Digital Garden template updates easy.
-
-## Deployment
-
-See:
-
-- `docs/OBSIDIAN-WORKFLOW.md`
-- `docs/DEPLOYMENT-VERCEL-CLOUDFLARE.md`
-- `docs/MANUAL-SETUP.md`
+- `npm run legacy:start`
+- `npm run legacy:build`
