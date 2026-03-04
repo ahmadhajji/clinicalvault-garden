@@ -4,8 +4,7 @@
     "buildCommand": "npm run modern:build",
     "devCommand": "npm start",
     "routes": [
-        { "src": "/api/(.*)", "dest": "/api/$1" },
         { "handle": "filesystem" },
-        { "src": "/(.*)", "dest": "/index.html" }
+        { "src": "/note/(.*)", "dest": "/index.html" }
       ]
 }
